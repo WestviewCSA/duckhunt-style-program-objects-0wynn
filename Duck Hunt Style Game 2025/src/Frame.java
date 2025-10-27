@@ -1,7 +1,11 @@
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,14 +20,36 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	//frame size
-	private int screenWidth = 900, screenHeight = 600;
+	private int screenWidth = 6000, screenHeight = 4300;
 	private String title = "Duck Hunt";
 	
 	
 	/**
 	 * Declare and instantiate (create) your objects here
 	 */
-	private Duck duckObject = new Duck();
+	private Dog dog = new Dog ("dog1.png");
+	
+	private MyCursor Cursor = new MyCursor();
+	
+	private Background myBackground = new Background();
+	
+	private ChristmasBush myBush = new ChristmasBush();
+	
+	private Cloud myCloud = new Cloud();
+	
+	private Santa mySanta = new Santa();
+	
+	private gift myGift = new gift();
+	
+    private HitSign myHitSign = new HitSign();	
+    
+    private ShotSign myRound = new ShotSign();
+    
+    private ScoreSign myScore = new ScoreSign();
+
+    
+    
+
 	
 	public void paint(Graphics pen) {
 		
@@ -33,10 +59,27 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		//call paint for the object
 		//for objects, you call methods on them using the dot operator
 		//methods use always involve parenthesis
-		duckObject.paint(pen);
 		
 		
+		myBackground.paint(pen);
 		
+		Cursor.paint(pen);
+		
+		myBush.paint(pen);
+		
+		myCloud.paint(pen);
+		
+		mySanta.paint(pen);
+		
+		myGift.paint(pen);
+		
+		myHitSign.paint(pen);
+		
+		myRound.paint(pen);
+		
+		myScore.paint(pen);
+		
+		dog.paint(pen);
 	}
 	
 	
@@ -50,6 +93,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void mouseEntered(MouseEvent mouse) {
 	    // Runs when the mouse enters the area of a component (like a button).
 	    // Example: You could highlight the button when the mouse hovers over it.
+		
+		System.out.println(mouse.getX()-25  + mouse.getY()-50);
 	}
 
 	@Override
@@ -62,7 +107,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void mousePressed(MouseEvent mouse) {
 	    // Runs when a mouse button is pressed down.
 	    // Example: You could start dragging an object here.
-	}
+		int mx = mouse.getX();
+		int my = mouse.getY();
+		
+		myGift.checkCollision(mx , my);
+		
+	
+			}
+		
+	
+	
 
 	@Override
 	public void mouseReleased(MouseEvent mouse) {
@@ -131,6 +185,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		t.start();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+		
+		
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image image = toolkit.getImage("christmasCursor.png");
+		Cursor a = toolkit.createCustomCursor(image , new Point(this.getX(), this.getY()), "");
+		this.setCursor (a);
 	}
 
 }
