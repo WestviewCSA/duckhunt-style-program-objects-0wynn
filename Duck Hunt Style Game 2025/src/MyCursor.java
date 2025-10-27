@@ -31,8 +31,8 @@ public class MyCursor {
         tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
         
         // Default values
-        scaleX = 0.3;
-        scaleY = 0.3;
+        scaleX = 0.8;
+        scaleY = 0.8;
         x = 0;
         y = 0;
 

@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -27,7 +28,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	/**
 	 * Declare and instantiate (create) your objects here
 	 */
-	private Dog dog = new Dog ("dog1.png");
+	private Dog myDog = new Dog ();
 	
 	private MyCursor Cursor = new MyCursor();
 	
@@ -37,7 +38,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	
 	private Cloud myCloud = new Cloud();
 	
-	private Santa mySanta = new Santa();
 	
 	private gift myGift = new gift();
 	
@@ -48,7 +48,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     private ScoreSign myScore = new ScoreSign();
 
     
-    
+    private int totalScore = 0; // needs to increase when it 
+    private int time = 30;
 
 	
 	public void paint(Graphics pen) {
@@ -69,7 +70,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		myCloud.paint(pen);
 		
-		mySanta.paint(pen);
 		
 		myGift.paint(pen);
 		
@@ -79,7 +79,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		myScore.paint(pen);
 		
-		dog.paint(pen);
+		myDog.paint(pen);
+		
+	
+		Font f = new Font ("Segoe UI" , Font.PLAIN, 38);
+		pen.setFont(f);;
+		pen.setColor(Color.yellow);
+		pen.drawString("" + totalScore, 745, 50); // total score is a variavle at top
+		pen.drawString("" + time, 310,510);
 	}
 	
 	
@@ -87,6 +94,26 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void mouseClicked(MouseEvent mouse) {
 	    // Runs when the mouse is clicked (pressed and released quickly).
 	    // Example: You could use this to open a menu or select an object.
+		int xVal = mouse.getX();
+		int Yval = mouse.getY();
+		
+		System.out.println( "mouse clicked at : x :" + xVal + " and Yval y :" + Yval);
+		
+		if(myGift.isClicked(xVal, Yval)) {
+			myGift.hit();
+			//myDog.showRetrieve(myGift.x);
+			//myDog.setLocation(xVal, 350);
+			myDog.hit(xVal);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	@Override
@@ -110,10 +137,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		int mx = mouse.getX();
 		int my = mouse.getY();
 		
-		myGift.checkCollision(mx , my);
-		
 	
-			}
+		}
+	
+			
 		
 	
 	

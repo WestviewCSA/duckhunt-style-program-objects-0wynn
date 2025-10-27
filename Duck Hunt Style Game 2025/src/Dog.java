@@ -2,79 +2,189 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 
-public class Dog{
-	private Image img; 	
-	private AffineTransform tx;
-	int width, height;
-	int x, y;						//position of the object
-	int vx, vy;						//movement variables
-	double scaleWidth = 1.0;		 //change to scale image
-	double scaleHeight = 1.0; //change to scale image
+// The Duck class represents a picture of a duck that can be drawn on the screen.
+public class Dog {
+    // Instance variables (data that belongs to each Duck object)
+    private Image img;  
+    
+    // Stores the picture of the duck
+    private AffineTransform tx;      // Used to move (translate) and resize (scale) the image
 
-	public Dog(String filename) {
-		img = getImage("/imgs/"+filename); //load the image for Tree
+    // Variables to control the size (scale) of the duck image
+    private double scaleX;           
+    private double scaleY;           
 
-		//alter these
-		width = 0;
-		height = 0;
-		x = 0;
-		y = 0;
-		vx = 0;
-		vy = 0;
-		
-		
-		
-		tx = AffineTransform.getTranslateInstance(0, 0);
-		init(x, y); 				//initialize the location of the image
-									//use your variables
-	}
-	
-	public void changePicture(String newFileName) {
-		img = getImage(newFileName);
-		init(0, 0);
-	}
-	
-	
-	public void paint(Graphics g) {
-		//these are the 2 lines of code needed draw an image on the screen
-		Graphics2D g2 = (Graphics2D) g;
-		
-		
-		x+=vx;
-		y+=vy;
-		
-		//dog goes 
-		if ( y <= 500) {
-			vy = 5;
-		}
-			
-		
-		
-		
-		init(x,y);
-		g2.drawImage(img, tx, null);
+    // Variables to control the location (x and y position) of the duck
+    private double x;                
+    private double y;        
+    
+    //variables for speed
+    private int vx;
+    private int vy;
 
-	}
-	
-	private void init(double a, double b) {
-		tx.setToTranslation(a, b);
-		tx.scale(scaleWidth, scaleHeight);
-	}
+    private int imgWidth = 1080;
+    private int imgHeight = 1080;
+    
+    private boolean hit = false;
+    private int startX = 0;
+    
+    private boolean visible = false;
+    private String mode = "";
+    // Constructor: runs when you make a new Duck object
+    public Dog () {
+        img = getImage("/imgs/The_Santa"); // Load the image file
+        tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
+        
+        // Default values
+        scaleX = 1.0;
+        scaleY = 1.0;
+        x = 0;
+        y = 0;
 
-	private Image getImage(String path) {
-		Image tempImage = null;
-		try {
-			URL imageURL = Dog.class.getResource(path);
-			tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return tempImage;
-	}
+        init(x, y); // Set up the starting location and size
+    }
+    
+    //2nd constructor to initialize location and scale!
+    public Dog(int x, int y, int scaleX, int scaleY) {
+    	this();
+    	this.x 		= x;
+    	this.y 		= y;
+    	this.scaleX = scaleX;
+    	this.scaleY = scaleY;
+    	init(x,y);
+    }
+    
+    //2nd constructor to initialize location and scale!
+    public Dog(int x, int y, int scaleX, int scaleY, int vx, int vy) {
+    	this();
+    	this.x 		= x;
+    	this.y 		= y;
+    	this.scaleX = scaleX;
+    	this.scaleY = scaleY;
+    	this.vx 	= vx; 
+    	this.vy 	= vy;
+    	init(x,y);
+    }
+    
+    public void setVelocityVariables(int vx, int vy) {
+    	this.vx = vx;
+    	this.vy = vy;
+    }
+    
+    
+    // Changes the picture to a new image file
+    public void changePicture(String imageFileName) {
+        img = getImage("/imgs/"+imageFileName);
+        init(x, y); // keep same location when changing image
+    }
+    
+    //update any variables for the object such as x, y, vx, vy
+    public void update() {
+    	if (!hit) {
+    		x += vx;
+    		y += vy;
+    		
+    	
+    		x += vx;
+        	y+= vy;
+        	
+        if( x<= 0) vx *=-1;
+        if (x>= 2000) vx *= -1;
+        if ( y<= 0) vy *= -1;
+        if (y >= 1146) vy *= -1;
+        
+        if ( vx == 0 && vy >10) {
+        	vy = -(int) (Math.random()*8+3) ;    	
+        	vx = (int) (Math.random()* 8 + 3);
+        	if ( Math.random() < 0.5) vx *= -1;
+        }
+        
+        
+    	}else {
+    		y += vy;
+    		if ( y>= 1146) {
+    		y = 1146;
+    			vy = 0;
+    			
+    		}
+    	}
+    		
+    		
+    		
+    		
+    		
+    	}
+    	
+    	
+    	
+    public void showRetrieve ( double duckLandingX) {
+    	x = duckLandingX - (imgWidth * scaleX / 2);
 
+    	visible = true;
+    	mode = "retrieve";
+    	
+    	
+    	if ( x < 100) {
+    		startX = 100;
+    	}else if ( x> 500) {
+    		startX = 500;
+    	}else {
+    		startX = 0;
+    	}
+    	
+    	x =startX;
+    	y = 350;
+    }
+    
+    public void hit( int x) {
+    	
+    	hit = true;
+    	vx = x;
+    	vy = 10;
+    	
+    	
+    }
+    
+    // Draws the duck on the screen
+    public void paint(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;   // Graphics2D lets us draw images
+        g2.drawImage(img, tx, null);      // Actually draw the duck image
+        update();
+        init(x,y);
+    }
+    
+    // Setup method: places the duck at (a, b) and scales it
+    private void init(double a, double b) {
+        tx.setToTranslation(a, b);        // Move the image to position (a, b)
+        tx.scale(scaleX, scaleY);         // Resize the image using the scale variables
+    }
+
+    // Loads an image from the given file path
+    private Image getImage(String path) {
+        Image tempImage = null;
+        try {
+            URL imageURL = Dog.class.getResource(path);
+            tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return tempImage;
+    }
+
+    // NEW: Method to set scale
+    public void setScale(double sx, double sy) {
+        scaleX = sx;
+        scaleY = sy;
+        init(x, y);  // Keep current location
+    }
+
+    // NEW: Method to set location
+    public void setLocation(double newX, double newY) {
+        x = newX;
+        y = newY;
+        init(x, y);  // Keep current scale
+    }
 }

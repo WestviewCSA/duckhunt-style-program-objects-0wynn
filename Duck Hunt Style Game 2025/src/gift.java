@@ -13,7 +13,6 @@ public class gift {
 	
 	
 	
-	private Dog dog = new Dog ("dog1.png");
 
     private Image img;   
     
@@ -28,14 +27,17 @@ public class gift {
     private double scaleY;           
 
     // Variables to control the location (x and y position) of the duck
-    private double x;                
+   public double x;                
     private double y;        
     
-    private boolean exploded = true;
+    private boolean hit = false;
     //debugging variable
     
     
     public boolean debugging = true;
+    
+    private int imgWidth = 128;
+    private int imgHeight = 128; // size of image
     
     
     //variables for speed
@@ -101,37 +103,54 @@ public class gift {
     //update any variables for the object such as x, y, vx, vy
     public void update() {
     	//x pos, updates based on vx
+    	if (!hit) {     // if it is not clicked, continue moving around
     	
-    	
-    	x += vx;
-    	y+= vy;
-    	
-    	int rightEdge = 2000-100;
-    	int bottomEdge = 1000-100;
-    	//right bounce
-    	
-    	if ( x <= 0) {
-    		x = 0;
-    		vx *= -1;
-    	}else if ( x>= rightEdge) {
-    		x = rightEdge;
-    		vx *= -1;
+    		x += vx;
+        	y+= vy;
+        	
+        if( x<= 0) vx *=-1;
+        if (x>= 2000) vx *= -1;
+        if ( y<= 0) vy *= -1;
+        if (y >= 900) vy *= -1;
+        
+        if ( vx == 0 && vy >10) {
+        	vy = -(int) (Math.random()*8+3) ;    	
+        	vx = (int) (Math.random()* 8 + 3);
+        	if ( Math.random() < 0.5) vx *= -1;
+        }
+        
+        
+    	}else {
+    		y += vy;
+    		if ( y>= 900) {
+    			y = 900;
+    			vy = 0;
+    			img = dead;
+    		}
     	}
-    			
-    	//respawning _> change to nornmal spirirt
-    	img = normal;
     	
-    	if(y<=0 ) {
-    		
-    		vy *= -1;
-    	} else if ( y>= bottomEdge) {
-    		y = bottomEdge;
-    		vy *= -1;
-    	}
+    
+
+    	
     	
     	
     }
     
+    
+    public void hit() {
+    	hit = true;
+    	vx = 0;
+    	vy = 10;
+    }
+    
+    
+    
+   public boolean isClicked ( int mouseX , int mouseY) {
+	   double scaledWidth = imgWidth * scaleX;
+	   double scaledHeight = imgHeight * scaleY;
+	   	return mouseX >= x && mouseX <= x + scaledWidth 
+	   			&& mouseY >= y && mouseY <=y + scaledHeight;
+   }
     
     
     
@@ -145,11 +164,13 @@ public class gift {
         update();
         init(x,y);
         
-        if(debugging) {
+       
+        	double scaledWidth = imgWidth * scaleX;
+       double scaledHeight = imgHeight * scaleY;
         	g.setColor(Color.green);
-        	g.drawRect( (int) x, (int) y, 140, 150);
+        	g.drawRect( (int) x, (int) y, (int) scaledWidth, (int) scaledHeight);
      
-        }
+        
     }
     
     // Setup method: places the duck at (a, b) and scales it
@@ -185,41 +206,22 @@ public class gift {
         
         //represent the mouse as a rectangle
     }
+}
     
-       public boolean checkCollision ( int mX , int mY) {
        
-       Rectangle mouse = new Rectangle ( mX, mY, 50, 50);
+      // Rectangle mouse = new Rectangle ( mX, mY, 50, 50);
        
         // represent the gift as a rectangle
        
-       Rectangle thisObject =  new Rectangle ( (int) x, (int) y, 50, 50);
+    //   Rectangle thisObject =  new Rectangle ( (int) x, (int) y, 50, 50);
 	  
        
        // use built in method for rectangle to check if they intersect
-       vx = 0; // turn off vx to fall from sky
-	   vy = 5;
-       if(mouse.intersects(thisObject)) {
-    	    // all y - grav
-    	   
-    	   
-    	   //change sprit to dead skin
-    	   vx = 0;
-    	   vy = 0;
-    	   img = dead;
+      
     
     	   
     	   //santa shows up where the duck is going to fall ( in the x)
-    	   this.dog.x = (int) x;
-    	   this.dog.y = 770;
-    	   this.dog.vy = -3;
-    	   return true;
-       }else {
+    	  
     	   
     	   
-    	   return false;
-       }
-    }
-       
-       public double getX() { return x;}
-       public double getY() { return y;}
-}
+    	   
