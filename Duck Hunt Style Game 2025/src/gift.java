@@ -41,8 +41,8 @@ public class gift {
     
     
     //variables for speed
-    private int vx = 4;
-    private int vy = 4;
+    private int vx = 6;
+    private int vy = 6;
 
     // Constructor: runs when you make a new Duck object
     public gift() {
@@ -146,8 +146,8 @@ public class gift {
     
     
    public boolean isClicked ( int mouseX , int mouseY) {
-	   double scaledWidth = imgWidth * scaleX;
-	   double scaledHeight = imgHeight * scaleY;
+	   double scaledWidth = imgWidth * scaleX * 1.2;
+	   double scaledHeight = imgHeight * scaleY * 1.2;
 	   	return mouseX >= x && mouseX <= x + scaledWidth 
 	   			&& mouseY >= y && mouseY <=y + scaledHeight;
    }

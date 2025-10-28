@@ -21,7 +21,7 @@ import javax.swing.Timer;
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener {
 	
 	//frame size
-	private int screenWidth = 6000, screenHeight = 4300;
+	private int screenWidth = 1920, screenHeight = 1080;
 	private String title = "Duck Hunt";
 	
 	
@@ -103,7 +103,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			myGift.hit();
 			//myDog.showRetrieve(myGift.x);
 			//myDog.setLocation(xVal, 350);
-			myDog.hit(xVal);
+			myDog.showRetrieve(myGift.x);
 		}
 		
 		
@@ -205,11 +205,25 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		f.setBackground(Color.blue);
 		f.add(this);
 		f.setResizable(false);
-		f.setLayout(new GridLayout(1,2));
-		f.addMouseListener(this);
-		f.addKeyListener(this);
+		
+		f.setContentPane(this);
+		
+		//panel size
+		this.setPreferredSize(new Dimension (screenWidth , screenHeight));
+		
+		//null layout
+		f.setLayout(null);
+		
+		
+		this.addMouseListener(this);
+		this.addKeyListener(this);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		
 		Timer t = new Timer(16, this);
 		t.start();
+		
+		f.pack();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 		

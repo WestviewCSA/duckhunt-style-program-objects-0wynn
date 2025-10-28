@@ -28,21 +28,36 @@ public class Dog {
     private int imgWidth = 1080;
     private int imgHeight = 1080;
     
-    private boolean hit = false;
+    
     private int startX = 0;
     
-    private boolean visible = false;
+    private boolean visible = false; // start hidden
     private String mode = "";
+    
+    
+    
+    
+    //counter for how long dog stays up
+    private int  retrieveCounter = 0;
+    
+    private final int TargetY = 750; // 200 target y position for when dog pops up (adjust if needed to look right on screen)
+    
+    private final int StayVisibleFrames = 90; // 60 how long the dog stays 1 sec = 60
+    
+    private final int TargetDownY = 1080;
+    
+    private final int GoDownSpeed = 10;
+    
     // Constructor: runs when you make a new Duck object
     public Dog () {
-        img = getImage("/imgs/The_Santa"); // Load the image file
+        img = getImage("/imgs/The_Santa.gif"); // Load the image file
         tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
         
         // Default values
-        scaleX = 1.0;
-        scaleY = 1.0;
+        scaleX = .2;
+        scaleY = .2;
         x = 0;
-        y = 0;
+        y = 1080; // start off the screen
 
         init(x, y); // Set up the starting location and size
     }
@@ -83,73 +98,75 @@ public class Dog {
     
     //update any variables for the object such as x, y, vx, vy
     public void update() {
-    	if (!hit) {
-    		x += vx;
-    		y += vy;
-    		
-    	
-    		x += vx;
-        	y+= vy;
-        	
-        if( x<= 0) vx *=-1;
-        if (x>= 2000) vx *= -1;
-        if ( y<= 0) vy *= -1;
-        if (y >= 1146) vy *= -1;
-        
-        if ( vx == 0 && vy >10) {
-        	vy = -(int) (Math.random()*8+3) ;    	
-        	vx = (int) (Math.random()* 8 + 3);
-        	if ( Math.random() < 0.5) vx *= -1;
-        }
-        
-        
-    	}else {
-    		y += vy;
-    		if ( y>= 1146) {
-    		y = 1146;
-    			vy = 0;
+    	if ( mode.equals("retrieve")) {
+    		if ( vy < 0) {
+    			y += vy;
     			
+    			if (y <= TargetY) {
+    				y = TargetY;
+    				vy = 0;
+    				retrieveCounter = 0;
+    			}
+    			
+    			
+    			// staying
+    		}
+    		else if (vy == 0 && Math.abs( y - TargetY) < 1) {
+    			
+    			retrieveCounter++;
+    			
+    			if ( retrieveCounter > StayVisibleFrames) {
+    				vy = GoDownSpeed;
+    				
+    				
+    				// moving down
+    			}
+    			
+    				} else if ( vy > 0) {
+        				y += vy;
+        				if ( y >= TargetDownY) {
+        					hide();
+    			}
     		}
     	}
-    		
-    		
-    		
-    		
-    		
+    	    			
     	}
     	
     	
     	
-    public void showRetrieve ( double duckLandingX) {
-    	x = duckLandingX - (imgWidth * scaleX / 2);
+    public void showRetrieve ( double giftLandingX) {
+    	
 
     	visible = true;
     	mode = "retrieve";
+    	retrieveCounter = 0;
     	
-    	
-    	if ( x < 100) {
-    		startX = 100;
-    	}else if ( x> 500) {
-    		startX = 500;
-    	}else {
-    		startX = 0;
+    	x = giftLandingX - (imgWidth * scaleX / 2);
+// x < 0
+    	if ( x < 50) {
+    		x = 50;              //BACKGROUND FOR SCHOOL W 650    H 446
+    	}else if (x >1920 - (imgWidth * scaleX) - 50) {
+    		x = 1920 - (imgWidth * scaleX) - 50;
     	}
     	
-    	x =startX;
-    	y = 350;
+    	y = 1000; //start at bottom
+    	vy = -8; // moves up fast
     }
     
-    public void hit( int x) {
-    	
-    	hit = true;
-    	vx = x;
-    	vy = 10;
-    	
-    	
-    }
+   public void hide() {
+	   visible = false;
+	   mode = "";
+	   retrieveCounter = 0;
+	   y = 1080; //back off screen
+			   
+   }
     
     // Draws the duck on the screen
     public void paint(Graphics g) {
+    	if (!visible) {
+    		return;
+    	}
+    	
         Graphics2D g2 = (Graphics2D) g;   // Graphics2D lets us draw images
         g2.drawImage(img, tx, null);      // Actually draw the duck image
         update();
