@@ -32,6 +32,11 @@ public class Dog {
     private int startX = 0;
     
     private boolean visible = false; // start hidden
+    private gift targetGift= null;
+    
+    
+    
+    
     private String mode = "";
     
     
@@ -159,7 +164,18 @@ public class Dog {
 	   retrieveCounter = 0;
 	   y = 1080; //back off screen
 			   
+	   
+	   if (targetGift !=null) {
+		   targetGift.reset(); // reset gift when dog is gone
+		   targetGift = null; // clear
+	   }
    }
+   
+   public void setTargetGift( gift g) {
+	   this.targetGift = g;
+   }
+   
+   
     
     // Draws the duck on the screen
     public void paint(Graphics g) {

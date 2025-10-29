@@ -3,6 +3,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
@@ -50,7 +51,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     
     private int totalScore = 0; // needs to increase when it 
     private int time = 30;
-
+    
+    private int missFlash = 0; //if user misses, the flash indicates it 
+    
+    private int missX = 0; // when you click and miss, this is the x cord when u miss
+    private int missY = 0; // when u miss, this gets the y cord
 	
 	public void paint(Graphics pen) {
 		
@@ -60,50 +65,50 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		//call paint for the object
 		//for objects, you call methods on them using the dot operator
 		//methods use always involve parenthesis
+		Graphics2D g2 = (Graphics2D) pen;
+		
+		myBackground.paint(g2);
+		
+		Cursor.paint(g2);
+		
+		myBush.paint(g2);
+		
+		myCloud.paint(g2);
 		
 		
-		myBackground.paint(pen);
+		myGift.paint(g2);
 		
-		Cursor.paint(pen);
+		myHitSign.paint(g2);
 		
-		myBush.paint(pen);
+		myRound.paint(g2);
 		
-		myCloud.paint(pen);
+		myScore.paint(g2);
 		
+		myDog.paint(g2);
 		
-		myGift.paint(pen);
+	// SCORE
+		 
+		Font score = new Font ("Segoe UI" , Font.PLAIN, 60);
+		pen.setFont(score);
+		pen.setColor(Color.RED);
+		pen.drawString("" + totalScore , 220 , 100);
 		
-		myHitSign.paint(pen);
+		if ( missFlash  > 0) {
+			
+			g2.setColor(Color.RED);
+			g2.setFont(score);
+			g2.drawString("MISS!" , missX - 60 , missY - 10);
+		}
 		
-		myRound.paint(pen);
-		
-		myScore.paint(pen);
-		
-		myDog.paint(pen);
-		
-	
-		Font f = new Font ("Segoe UI" , Font.PLAIN, 38);
-		pen.setFont(f);;
-		pen.setColor(Color.yellow);
-		pen.drawString("" + totalScore, 745, 50); // total score is a variavle at top
-		pen.drawString("" + time, 310,510);
-	}
+		}
 	
 	
 	@Override
 	public void mouseClicked(MouseEvent mouse) {
 	    // Runs when the mouse is clicked (pressed and released quickly).
 	    // Example: You could use this to open a menu or select an object.
-		int xVal = mouse.getX();
-		int Yval = mouse.getY();
 		
-		System.out.println( "mouse clicked at : x :" + xVal + " and Yval y :" + Yval);
-		
-		if(myGift.isClicked(xVal, Yval)) {
-			myGift.hit();
-			//myDog.showRetrieve(myGift.x);
-			//myDog.setLocation(xVal, 350);
-			myDog.showRetrieve(myGift.x);
+			
 		}
 		
 		
@@ -114,7 +119,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		
 		
-	}
+	
 
 	@Override
 	public void mouseEntered(MouseEvent mouse) {
@@ -134,8 +139,24 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void mousePressed(MouseEvent mouse) {
 	    // Runs when a mouse button is pressed down.
 	    // Example: You could start dragging an object here.
-		int mx = mouse.getX();
-		int my = mouse.getY();
+		int x = mouse.getX();
+		int y = mouse.getY();
+		
+		System.out.println ("mouse click at : x :" + x + "and y :" + y);
+		if ( myGift.isClicked( x , y)) {
+			myGift.hit();
+			totalScore += 10;
+			myDog.showRetrieve(myGift.x);
+			myDog.setTargetGift(myGift);
+			
+		} else {
+			totalScore -= 5;
+			if ( totalScore < 0 ) totalScore = 0;
+			
+			missX = x;
+			missY = y;
+			missFlash = 15;
+		}
 		
 	
 		}
@@ -185,9 +206,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	 * on the screen if those variables are being used for any drawing on the screen.
 	 */
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		 if ( missFlash > 0) {
+			 missFlash --;
+		 }
 		repaint();
+		
 	}
 	
 	/*

@@ -41,9 +41,12 @@ public class gift {
     
     
     //variables for speed
-    private int vx = 6;
-    private int vy = 6;
+    private int vx = 20;
+    private int vy = 20;
 
+    
+    
+    
     // Constructor: runs when you make a new Duck object
     public gift() {
         normal = getImage("/imgs/Moving_gift.gif"); 
@@ -126,6 +129,7 @@ public class gift {
     			y = 900;
     			vy = 0;
     			img = dead;
+    			
     		}
     	}
     	
@@ -153,8 +157,24 @@ public class gift {
    }
     
     
-    
-    
+    //called when duck lands after hit
+    public void reset() {
+    	
+    	
+    	hit = false;
+    	img = normal;
+    	
+    	
+    	vx = 20;
+    	
+    	if(Math.random() < 0.5) vx = -vx;
+    	vy = 20;
+    	
+    	x = Math.random() * (1920 - 200) + 100; // random x area in the screen
+    	y = 700; //start y below top
+    	
+    	init( x  , y);
+    }
     
     
     // Draws the duck on the screen
