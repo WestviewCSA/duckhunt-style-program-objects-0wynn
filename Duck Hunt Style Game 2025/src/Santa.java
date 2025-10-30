@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.net.URL;
 
 // The Duck class represents a picture of a duck that can be drawn on the screen.
-public class Dog {
+public class Santa {
     // Instance variables (data that belongs to each Duck object)
     private Image img;  
     
@@ -52,9 +52,12 @@ public class Dog {
     private final int TargetDownY = 1080;
     
     private final int GoDownSpeed = 10;
+
+	
+	private Frame frame = null;
     
     // Constructor: runs when you make a new Duck object
-    public Dog () {
+    public Santa () {
         img = getImage("/imgs/The_Santa.gif"); // Load the image file
         tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
         
@@ -68,7 +71,7 @@ public class Dog {
     }
     
     //2nd constructor to initialize location and scale!
-    public Dog(int x, int y, int scaleX, int scaleY) {
+    public Santa(int x, int y, int scaleX, int scaleY) {
     	this();
     	this.x 		= x;
     	this.y 		= y;
@@ -78,7 +81,7 @@ public class Dog {
     }
     
     //2nd constructor to initialize location and scale!
-    public Dog(int x, int y, int scaleX, int scaleY, int vx, int vy) {
+    public Santa(int x, int y, int scaleX, int scaleY, int vx, int vy) {
     	this();
     	this.x 		= x;
     	this.y 		= y;
@@ -156,6 +159,7 @@ public class Dog {
     	
     	y = 1000; //start at bottom
     	vy = -8; // moves up fast
+    	
     }
     
    public void hide() {
@@ -163,12 +167,29 @@ public class Dog {
 	   mode = "";
 	   retrieveCounter = 0;
 	   y = 1080; //back off screen
+	
+
+	   
 			   
 	   
-	   if (targetGift !=null) {
+	   if (targetGift !=null) { // if there is a gift,
 		   targetGift.reset(); // reset gift when dog is gone
 		   targetGift = null; // clear
+		   
+		   
+		   }
+	   if ( frame != null && frame.gameResetpend) {
+		   frame.doGamereset();
 	   }
+   }
+   
+   
+   
+   
+   public void setFrame( Frame f) {
+	   
+	   this.frame = f;
+	   
    }
    
    public void setTargetGift( gift g) {
@@ -199,7 +220,7 @@ public class Dog {
     private Image getImage(String path) {
         Image tempImage = null;
         try {
-            URL imageURL = Dog.class.getResource(path);
+            URL imageURL = Santa.class.getResource(path);
             tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
         } catch (Exception e) {
             e.printStackTrace();

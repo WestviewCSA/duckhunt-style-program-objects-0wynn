@@ -29,7 +29,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	/**
 	 * Declare and instantiate (create) your objects here
 	 */
-	private Dog myDog = new Dog ();
+	private Santa mySanta = new Santa ();
 	
 	private MyCursor Cursor = new MyCursor();
 	
@@ -47,8 +47,29 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     private ShotSign myRound = new ShotSign();
     
     private ScoreSign myScore = new ScoreSign();
+    
+    
+    
+    
+    // ALL DUCKS FOR HIT SIGN
+    // calling from giftHit.java
+    private giftHit Santa1 = new giftHit();
+    private giftHit Santa2 = new giftHit();
+    private giftHit Santa3 = new giftHit();
+    private giftHit Santa4 = new giftHit();
+    private giftHit Santa5 = new giftHit();
+    private giftHit Santa6 = new giftHit();
+    private giftHit Santa7 = new giftHit();
+    
 
     
+    private final int hitsignx = 170;
+    private final int hitsigny = 870;
+    private final int duckSpace = 100;
+    
+    
+   boolean gameResetpend = false; //eg. this is like a note. false is that there is no note for santa to get the gift
+    // when this is true, this means that santa left a note, so he will do whatever the note says after he goes up and down
     private int totalScore = 0; // needs to increase when it 
     private int time = 30;
     
@@ -56,6 +77,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     
     private int missX = 0; // when you click and miss, this is the x cord when u miss
     private int missY = 0; // when u miss, this gets the y cord
+	
+    public  int hitCounter = 0;
+	
 	
 	public void paint(Graphics pen) {
 		
@@ -84,7 +108,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		myScore.paint(g2);
 		
-		myDog.paint(g2);
+		mySanta.paint(g2);
+		
+		if ( hitCounter> 0) Santa1.paint(g2);
+		if (hitCounter > 1) Santa2.paint(g2);
+		if (hitCounter > 2) Santa3.paint(g2);
+		if (hitCounter > 3) Santa4.paint(g2);
+		if (hitCounter > 4) Santa5.paint(g2);
+		if (hitCounter > 5) Santa6.paint(g2);
+		if (hitCounter > 6) Santa7.paint(g2);
 		
 	// SCORE
 		 
@@ -145,12 +177,50 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		System.out.println ("mouse click at : x :" + x + "and y :" + y);
 		if ( myGift.isClicked( x , y)) {
 			myGift.hit();
+			
 			totalScore += 10;
-			myDog.showRetrieve(myGift.x);
-			myDog.setTargetGift(myGift);
+			if (hitCounter == 0) {
+	            Santa1.setLocation(hitsignx + 150, hitsigny + 20);
+	            hitCounter++;
+	        }
+	        else if (hitCounter == 1) {
+	            Santa2.setLocation(hitsignx + 150 + duckSpace, hitsigny + 20);
+	            hitCounter++;;
+	        }
+	        else if (hitCounter == 2) {
+	            Santa3.setLocation(hitsignx + 150 + 2*duckSpace, hitsigny + 20);
+	            hitCounter++;
+	        }
+	        else if (hitCounter == 3) {
+	            Santa4.setLocation(hitsignx + 150 + 3*duckSpace, hitsigny + 20);
+	            hitCounter ++;
+	        }
+	        else if (hitCounter == 4) {
+	            Santa5.setLocation(hitsignx + 150 + 4*duckSpace, hitsigny + 20);
+	            hitCounter ++;
+	        }
+	        else if (hitCounter == 5) {
+	            Santa6.setLocation(hitsignx + 150 + 5*duckSpace, hitsigny + 20);
+	            hitCounter ++;
+	        }
+	        else if (hitCounter == 6) {
+	            Santa7.setLocation(hitsignx + 150 + 6*duckSpace, hitsigny + 20);
+	            hitCounter ++;
+	            
+	            gameResetpend = true; // this means that all the code is ran, but wait for a little after santa goes up and down
+	        
+	           
+	        }
+			
+		
+			
+			mySanta.setFrame(this);
+			mySanta.showRetrieve(myGift.x);
+			mySanta.setTargetGift(myGift);
 			
 		} else {
 			totalScore -= 5;
+			 
 			if ( totalScore < 0 ) totalScore = 0;
 			
 			missX = x;
@@ -158,7 +228,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			missFlash = 15;
 		}
 		
-	
+		
+		
 		}
 	
 			
@@ -205,6 +276,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	 * Allows for our animation since any changes to states/variables will be reflected
 	 * on the screen if those variables are being used for any drawing on the screen.
 	 */
+	
+	public void doGamereset() {
+		
+		totalScore = 0;
+		
+		Santa1.setLocation(-200, -200);
+	    Santa2.setLocation(-200, -200);
+	    Santa3.setLocation(-200, -200);
+	    Santa4.setLocation(-200, -200);
+	    Santa5.setLocation(-200, -200);
+	    Santa6.setLocation(-200, -200);
+	    Santa7.setLocation(-200, -200);
+		
+	    hitCounter = 0;
+	    gameResetpend = false;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
@@ -257,6 +345,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		Image image = toolkit.getImage("christmasCursor.png");
 		Cursor a = toolkit.createCustomCursor(image , new Point(this.getX(), this.getY()), "");
 		this.setCursor (a);
+		
+		mySanta.setFrame(this);
+		  
+		Santa1.setLocation(-200, -200);
+	    Santa2.setLocation(-200, -200);
+	    Santa3.setLocation(-200, -200);
+	    Santa4.setLocation(-200, -200);
+	    Santa5.setLocation(-200, -200);
+	    Santa6.setLocation(-200, -200);
+	    Santa7.setLocation(-200, -200);
+		
+		
+		
+		
 	}
 
 }

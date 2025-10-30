@@ -25,7 +25,7 @@ public class HitSign {
 
     // Constructor: runs when you make a new Duck object
     public HitSign() {
-        img = getImage("/imgs/The_HitSign.gif"); // Load the image file
+        img = getImage("/imgs/hitSign.png"); // Load the image file
         
         tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
         

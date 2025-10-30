@@ -145,6 +145,7 @@ public class gift {
     	hit = true;
     	vx = 0;
     	vy = 10;
+    
     }
     
     
