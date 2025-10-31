@@ -28,14 +28,14 @@ public class ShotSign {
 
     // Constructor: runs when you make a new Duck object
     public ShotSign() {
-        img = getImage("/imgs/The_ShotSign.gif"); // Load the image file
+        img = getImage("/imgs/Shotsign.png"); // Load the image file
         
         tx = AffineTransform.getTranslateInstance(0, 0); // Start with image at (0,0)
         
         // Default values
         scaleX = 0.2;
         scaleY = 0.2;
-        x = 1800;
+        x = 1200;
         y = -3;
 
         init(x, y); // Set up the starting location and size

@@ -178,9 +178,8 @@ public class Santa {
 		   
 		   
 		   }
-	   if ( frame != null && frame.gameResetpend) {
-		   frame.doGamereset();
-	   }
+	   
+	   
    }
    
    

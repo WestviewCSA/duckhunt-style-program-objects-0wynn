@@ -18,6 +18,11 @@ public class Music  implements Runnable  {
     AudioInputStream audioStream;
     Clip audioClip;
     String fn;
+    
+    
+    
+    
+    
 	public Music(String fileName, boolean loops) {
 		fn = fileName;
 		audioFile = new File(fileName);

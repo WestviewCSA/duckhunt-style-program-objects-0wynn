@@ -48,8 +48,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     
     private ScoreSign myScore = new ScoreSign();
     
-    
-    
+
     
     // ALL DUCKS FOR HIT SIGN
     // calling from giftHit.java
@@ -61,6 +60,17 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     private giftHit Santa6 = new giftHit();
     private giftHit Santa7 = new giftHit();
     
+    //SHOTTS
+    
+    private Snowball hit1 = new Snowball();
+    private Snowball hit2 = new Snowball();
+    private Snowball hit3 = new Snowball();
+    private Snowball hit4 = new Snowball();
+    private Snowball hit5 = new Snowball();
+    private Snowball hit6 = new Snowball();
+    private Snowball hit7 = new Snowball();
+
+
 
     
     private final int hitsignx = 170;
@@ -68,10 +78,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     private final int duckSpace = 100;
     
     
-   boolean gameResetpend = false; //eg. this is like a note. false is that there is no note for santa to get the gift
-    // when this is true, this means that santa left a note, so he will do whatever the note says after he goes up and down
+  private int delayReset = 0;
+    
     private int totalScore = 0; // needs to increase when it 
-    private int time = 30;
+   
     
     private int missFlash = 0; //if user misses, the flash indicates it 
     
@@ -79,6 +89,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     private int missY = 0; // when u miss, this gets the y cord
 	
     public  int hitCounter = 0;
+    
+    
+    private int shotsLeft = 7; // how many shots are left
 	
 	
 	public void paint(Graphics pen) {
@@ -92,6 +105,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		Graphics2D g2 = (Graphics2D) pen;
 		
 		myBackground.paint(g2);
+		
+
 		
 		Cursor.paint(g2);
 		
@@ -118,6 +133,40 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		if (hitCounter > 5) Santa6.paint(g2);
 		if (hitCounter > 6) Santa7.paint(g2);
 		
+if( hitCounter == 7 || shotsLeft == 0 && totalScore >= 55) {  //end text
+	Font gameOver = new Font ("Segoe UI" , Font.BOLD, 100);
+	pen.setFont(gameOver);
+	pen.setColor(Color.BLUE);
+	pen.drawString("YOU WON!" , 220 , 100);
+	
+}
+
+if (shotsLeft == 0) {  // end text
+	if(totalScore < 55) {
+	Font gameOver = new Font ("Segoe UI" , Font.BOLD, 100);
+	pen.setFont(gameOver);
+	pen.setColor(Color.BLUE);
+	pen.drawString("YOU LOST!" , 500 , 100);
+	
+
+}
+}
+int i = 0;
+
+while ( i < shotsLeft) {
+	if (i == 0) hit1.paint(g2);
+    else if (i == 1) hit2.paint(g2);
+    else if (i == 2) hit3.paint(g2);
+    else if (i == 3) hit4.paint(g2);
+    else if (i == 4) hit5.paint(g2);
+    else if (i == 5) hit6.paint(g2);
+    else if (i == 6) hit7.paint(g2);
+    i++;
+}
+
+
+
+
 	// SCORE
 		 
 		Font score = new Font ("Segoe UI" , Font.PLAIN, 60);
@@ -141,16 +190,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    // Example: You could use this to open a menu or select an object.
 		
 			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	}
 	
 
 	@Override
@@ -166,6 +206,34 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    // Runs when the mouse leaves the area of a component.
 	    // Example: You could remove the highlight when the mouse moves away.
 	}
+	
+	private void consumeShot() {
+		if (shotsLeft <= 0) 
+			return;
+		
+		
+		int snowBallHide = shotsLeft - 1; // number that tells which snowball should disappear
+		
+		if ( snowBallHide == 6) hit7.setLocation(-500, -500);
+		else if ( snowBallHide == 5) hit6.setLocation(-500, -500);
+		else if ( snowBallHide == 4) hit5.setLocation(-500, -500);
+		else if ( snowBallHide == 3) hit4.setLocation(-500, -500);
+		else if ( snowBallHide == 2) hit3.setLocation(-500, -500);
+		else if ( snowBallHide == 1) hit2.setLocation(-500, -500);
+		else if ( snowBallHide == 0) hit1.setLocation(-500, -500);
+
+		shotsLeft --;
+		
+		
+		
+		if (shotsLeft == 0) {
+			delayReset = 1;
+		}
+		
+		
+		
+	
+	}
 
 	@Override
 	public void mousePressed(MouseEvent mouse) {
@@ -174,43 +242,42 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		int x = mouse.getX();
 		int y = mouse.getY();
 		
+		if (shotsLeft >0) {
+			consumeShot();
+		}
+		
+		
+		
+		
 		System.out.println ("mouse click at : x :" + x + "and y :" + y);
 		if ( myGift.isClicked( x , y)) {
-			myGift.hit();
 			
+			// gift hit sound
+			Music hitSound = new Music("hitsound.wav", false);
+			hitSound.play();
+			
+			myGift.hit();
 			totalScore += 10;
-			if (hitCounter == 0) {
-	            Santa1.setLocation(hitsignx + 150, hitsigny + 20);
-	            hitCounter++;
-	        }
-	        else if (hitCounter == 1) {
-	            Santa2.setLocation(hitsignx + 150 + duckSpace, hitsigny + 20);
-	            hitCounter++;;
-	        }
-	        else if (hitCounter == 2) {
-	            Santa3.setLocation(hitsignx + 150 + 2*duckSpace, hitsigny + 20);
-	            hitCounter++;
-	        }
-	        else if (hitCounter == 3) {
-	            Santa4.setLocation(hitsignx + 150 + 3*duckSpace, hitsigny + 20);
-	            hitCounter ++;
-	        }
-	        else if (hitCounter == 4) {
-	            Santa5.setLocation(hitsignx + 150 + 4*duckSpace, hitsigny + 20);
-	            hitCounter ++;
-	        }
-	        else if (hitCounter == 5) {
-	            Santa6.setLocation(hitsignx + 150 + 5*duckSpace, hitsigny + 20);
-	            hitCounter ++;
-	        }
-	        else if (hitCounter == 6) {
-	            Santa7.setLocation(hitsignx + 150 + 6*duckSpace, hitsigny + 20);
-	            hitCounter ++;
-	            
-	            gameResetpend = true; // this means that all the code is ran, but wait for a little after santa goes up and down
-	        
-	           
-	        }
+			
+			
+			
+			
+			
+			if (hitCounter <= 6) {
+			    int hit_x = hitsignx + 150 + hitCounter * duckSpace;
+			    int hit_y = hitsigny + 20;
+
+			    if (hitCounter == 0) Santa1.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 1) Santa2.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 2) Santa3.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 3) Santa4.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 4) Santa5.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 5) Santa6.setLocation(hit_x, hit_y);
+			    else if (hitCounter == 6) Santa7.setLocation(hit_x, hit_y);
+
+			    
+			    hitCounter++;
+			}
 			
 		
 			
@@ -219,6 +286,12 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 			mySanta.setTargetGift(myGift);
 			
 		} else {
+			
+			// gift miss shot sound
+			Music hitSound = new Music("misshit.wav", false);
+			hitSound.play();
+			
+			
 			totalScore -= 5;
 			 
 			if ( totalScore < 0 ) totalScore = 0;
@@ -280,6 +353,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void doGamereset() {
 		
 		totalScore = 0;
+		hitCounter = 0;
+		delayReset = 0;
 		
 		Santa1.setLocation(-200, -200);
 	    Santa2.setLocation(-200, -200);
@@ -289,8 +364,31 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    Santa6.setLocation(-200, -200);
 	    Santa7.setLocation(-200, -200);
 		
-	    hitCounter = 0;
-	    gameResetpend = false;
+
+	    
+	    
+	    shotsLeft = 7;
+	    int snowBallX = 1450; // where the snowball pops in x area
+	    int snowBallY = 53; // in y area
+	    
+	    int ballSpacing = 60;
+	    int i = 0;
+	    while ( i < shotsLeft) {
+	    	int x = snowBallX + i * ballSpacing;
+	    	if ( i == 0) hit1.setLocation(x, snowBallY);
+	    	else if (i ==1) hit2.setLocation(x, snowBallY);
+	    	else if (i ==2) hit3.setLocation(x, snowBallY);
+	    	else if (i ==3) hit4.setLocation(x, snowBallY);
+	    	else if (i ==4) hit5.setLocation(x, snowBallY);
+	    	else if (i ==5) hit6.setLocation(x, snowBallY);
+	    	else if (i ==6) hit7.setLocation(x, snowBallY);
+	    	
+	    
+	    	
+	    	i++;
+	    	
+	    }
+	    
 	}
 	
 	@Override
@@ -298,6 +396,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// TODO Auto-generated method stub
 		 if ( missFlash > 0) {
 			 missFlash --;
+		 }
+		 
+		 
+		 if (delayReset > 0) {
+			 delayReset++;
+			 if ( delayReset > 120) {
+				 doGamereset();
+				 delayReset = 0;
+			 }
+
 		 }
 		repaint();
 		
@@ -326,7 +434,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		//null layout
 		f.setLayout(null);
+		Music mySound = new Music("fortniteaudio_compressed.wav", true);
 		
+		mySound.play();
 		
 		this.addMouseListener(this);
 		this.addKeyListener(this);
@@ -356,6 +466,29 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    Santa6.setLocation(-200, -200);
 	    Santa7.setLocation(-200, -200);
 		
+	    
+	    int snowBallX = 1450; // where the snowball pops in x area
+	    int snowBallY = 53; // in y area
+	    
+	    int ballSpacing = 60; // space between each snowball
+	    int i = 0;
+	    
+	    while (i < 7) {
+	    	int x = snowBallX + i * ballSpacing;
+	    	if ( i == 0) hit1.setLocation(x, snowBallY);
+	    	else if (i ==1) hit2.setLocation(x, snowBallY);
+	    	else if (i ==2) hit3.setLocation(x, snowBallY);
+	    	else if (i ==3) hit4.setLocation(x, snowBallY);
+	    	else if (i ==4) hit5.setLocation(x, snowBallY);
+	    	else if (i ==5) hit6.setLocation(x, snowBallY);
+	    	else if (i ==6) hit7.setLocation(x, snowBallY);
+	    	
+	    	
+	    	i++;
+	    	
+	    }
+	    
+	  
 		
 		
 		
